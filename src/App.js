@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 import { Note } from './components/Note';
 
-const notesDefault = [
+/* const notesDefault = [
   {
     userId: 1,
     id: 1,
@@ -21,11 +21,26 @@ const notesDefault = [
     title: "ea molestias quasi exercitationem repellat qui ipsa sit aut",
     body: "et iusto sed quo iure\nvoluptatem occaecati omnis eligendi aut ad\nvoluptatem doloribus vel accusantium quis pariatur\nmolestiae porro eius odio et labore et velit aut"
   },
-]
+] */
 
 function App() {
-  const [notes, setNotes] = useState(notesDefault);
+  const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  /*1° Se renderiza todo sin haber ejecutado el efecto
+  2° Se ejecuta el efecto, hace el fetch, setea las notas y renderiza
+  */
+
+  useEffect(() => {
+    setLoading(true);
+    fetch('https://jsonplaceholder.typicode.com/posts')  //fetch devuelve una promesa (tipo de dato que se puede resolver o rechazar)
+      .then(response => response.json())
+      .then(json => {
+        setNotes(json);
+        setLoading(false);
+      });
+  }, []);
 
   const handleChange = (e) => {
     setNewNote(e.target.value);
@@ -51,6 +66,7 @@ function App() {
         <input type="text" onChange={handleChange} value={newNote} />
         <button>Add Note</button>
       </form>
+      {loading ? <p>Loading Notes...</p> : null}
       <ul>
         {notes
           .map(note => {
