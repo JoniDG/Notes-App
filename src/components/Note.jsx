@@ -1,11 +1,11 @@
 import React from 'react'
 
-export const Note = ({ id, content, date }) => {
+export const Note = ({ title, body }) => {
     return (
-        <li key={id}>
-            <p>{content}</p>
+        <li>
+            <h3>{title}</h3>
             <small>
-                <time>{date}</time>
+                {body}
             </small>
         </li>
     )
