@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import './App.css';
 import { Note } from './components/Note';
+import { createNote } from './services/notes/createNote';
+import { getAllNotes } from './services/notes/getAllNotes';
 
 /* const notesDefault = [
   {
@@ -34,12 +36,11 @@ function App() {
 
   useEffect(() => {
     setLoading(true);
-    fetch('https://jsonplaceholder.typicode.com/posts')  //fetch devuelve una promesa (tipo de dato que se puede resolver o rechazar)
-      .then(response => response.json())
-      .then(json => {
-        setNotes(json);
+    getAllNotes()
+      .then(response => {
+        setNotes(response);
         setLoading(false);
-      });
+      })
   }, []);
 
   const handleChange = (e) => {
@@ -49,12 +50,14 @@ function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const noteObject = {
-      id: notes.length + 1,
       title: newNote,
       body: newNote,
     }
-    setNotes(notes.concat(noteObject));
-    setNewNote('');
+    createNote(noteObject)
+      .then(response => {
+        setNotes([...notes, response]);
+        setNewNote('');
+      })
   }
 
   return (
