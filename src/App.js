@@ -55,7 +55,7 @@ function App() {
     }
     createNote(noteObject)
       .then(response => {
-        setNotes([...notes, response]);
+        setNotes((prevNotes) => [...prevNotes, response]);  //Si haces notes.concat no te aseguras que notes sea la misma referencia
         setNewNote('');
       })
   }
